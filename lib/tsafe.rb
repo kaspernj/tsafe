@@ -101,7 +101,7 @@ module Tsafe
   #Predefined synchronized array.
   #
   #===Examples
-  # arr = Tsafe::Synced_array.new
+  # arr = Tsafe::MonArray.new
   # arr << 5
   # ret = arr[0]
   class MonArray < ::Array
@@ -111,7 +111,7 @@ module Tsafe
   #Predefined synchronized hash.
   #
   #===Examples
-  # h = Tsafe::Synced_hash.new
+  # h = Tsafe::MonHash.new
   # h['test'] = 'trala'
   # ret = h['test']
   class MonHash < ::Hash
