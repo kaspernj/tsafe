@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "tsafe"
   gem.homepage = "http://github.com/kaspernj/tsafe"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Threadsafe proxy, array, hash and framework for making other classes threadsafe.}
+  gem.description = %Q{Proxy-objects for making another object threadsafe by proxying calls through mutex and method_missing. Monitored array and hash where all methods are going through monitor. Threadsafe class for including into a class that extends another class in order to make it threadsafe.}
   gem.email = "k@spernj.org"
   gem.authors = ["Kasper Johansen"]
   # dependencies defined in Gemfile
