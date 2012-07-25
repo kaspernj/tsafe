@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{tsafe}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Kasper Johansen"]
-  s.date = %q{2012-05-12}
+  s.date = %q{2012-07-25}
   s.description = %q{Proxy-objects for making another object threadsafe by proxying calls through mutex and method_missing. Monitored array and hash where all methods are going through monitor. Threadsafe class for including into a class that extends another class in order to make it threadsafe.}
   s.email = %q{k@spernj.org}
   s.extra_rdoc_files = [
@@ -25,7 +25,14 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "include/monarray.rb",
+    "include/monhash.rb",
+    "include/monitored.rb",
+    "include/mrswlock.rb",
+    "include/mutexed.rb",
+    "include/proxy.rb",
     "lib/tsafe.rb",
+    "spec/mrswlock_spec.rb",
     "spec/spec_helper.rb",
     "spec/tsafe_spec.rb",
     "tsafe.gemspec"
