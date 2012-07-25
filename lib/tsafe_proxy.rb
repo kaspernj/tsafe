@@ -1,13 +1,13 @@
 #Instances of this class proxies calls to a given-object by using a mutex or monitor.
 #
 #==== Examples
-# threadsafe_array = Tsafe::Proxy.new(:obj => [])
-# threadsafe_array << 5
-# ret = threadsafe_array[0]
-#
-# threadsafe_array = Tsafe::Proxy.new(:obj => [], :monitor => true)
+#  threadsafe_array = Tsafe::Proxy.new(:obj => [])
+#  threadsafe_array << 5
+#  ret = threadsafe_array[0]
+#  
+#  threadsafe_array = Tsafe::Proxy.new(:obj => [], :monitor => true)
 class Tsafe::Proxy
-  #Spawn needed vars.
+  #Spawns needed vars.
   def initialize(args)
     if args[:monitor]
       @mutex = Monitor.new

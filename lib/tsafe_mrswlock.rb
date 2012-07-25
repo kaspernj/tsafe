@@ -34,8 +34,8 @@ class Tsafe::Mrswlock
     end
   end
   
-  # Runs the given block through the write-synchronization (locks both reading and writing).
-  # ===Examples
+  #Runs the given block through the write-synchronization (locks both reading and writing).
+  #===Examples
   #  lock.wsync do
   #    #do something within lock.
   #  end
@@ -65,11 +65,11 @@ class Tsafe::Mrswlock
   
   #This module can be included in order to painlessly make a thread-safe multi-reader-single-writer thread-safe copy of a class.
   #===Examples
-  # class Tsafe::MonHash < ::Hash
-  #   @@tsafe_mrswlock_w_methods = [:[]=, :clear, :delete, :delete_if, :keep_if, :merge!, :rehash, :reject!, :replace, :select!, :shift, :store, :update, :values_at]
-  #   @@tsafe_mrswlock_r_methods = [:each, :each_key, :each_pair, :each_value]
-  #   include Tsafe::Mrswlock::SynModule
-  # end
+  #  class Tsafe::MonHash < ::Hash
+  #    @@tsafe_mrswlock_w_methods = [:[]=, :clear, :delete, :delete_if, :keep_if, :merge!, :rehash, :reject!, :replace, :select!, :shift, :store, :update, :values_at]
+  #    @@tsafe_mrswlock_r_methods = [:each, :each_key, :each_pair, :each_value]
+  #    include Tsafe::Mrswlock::SynModule
+  #  end
   module SynModule
     def self.included(base)
       base.to_s.split("::").inject(Object, :const_get).class_eval do

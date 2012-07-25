@@ -1,9 +1,9 @@
 #This module can be included on a class to make all method-calls synchronized (by using mutex). Examples with array and hash are below.
 #
 #===Examples
-# class MySyncedClass < SomeOtherClassThatNeedsToBeSynchronized
-#   include Tsafe::Mutexed
-# end
+#  class MySyncedClass < SomeOtherClassThatNeedsToBeSynchronized
+#    include Tsafe::Mutexed
+#  end
 module Tsafe::Mutexed
   def self.included(base)
     base.to_s.split("::").inject(Object, :const_get).class_eval do

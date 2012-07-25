@@ -14,13 +14,19 @@ describe "Tsafe::Rwmutex" do
       hash[realcount] = realcount
     end
     
+    called = false
     hash._tsafe_rsync do
-    
+      called = true
     end
     
+    raise "Expected to be called." if !called
+    
+    called = false
     hash._tsafe_wsync do
-      
+      called = true
     end
+    
+    raise "Expected to be called." if !called
     
     ts = []
     

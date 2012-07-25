@@ -1,9 +1,9 @@
 #This module can be included on a class to make all method-calls synchronized (by using monitor). Examples with array and hash are below.
 #
 #===Examples
-# class MySyncedClass < SomeOtherClassThatNeedsToBeSynchronized
-#   include Tsafe::Monitored
-# end
+#  class MySyncedClass < SomeOtherClassThatNeedsToBeSynchronized
+#    include Tsafe::Monitored
+#  end
 module Tsafe::Monitored
   def self.included(base)
     base.to_s.split("::").inject(Object, :const_get).class_eval do
