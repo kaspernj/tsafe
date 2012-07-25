@@ -91,30 +91,50 @@ describe "Tsafe::Rwmutex" do
     end
   end
   
-  it "should be able to handle certain deadlocks" do
+  it "should be able to read while writing from same thread while other threads are stressing" do
     hash = Tsafe::MonHash.new
     0.upto(1000) do |count|
       hash[count] = count
     end
     
-    Timeout.timeout(3) do
-      hash.keep_if do |key, val|
-        hash.each do |key2, val2|
-          #ignore.
-        end
-        
-        if key > 500
-          true
-        else
-          false
+    Timeout.timeout(7) do
+      ts = []
+      1.upto(5) do
+        ts << Thread.new do
+          hash.keep_if do |key, val|
+            hash.each do |key2, val2|
+              #ignore.
+            end
+            
+            if key > 500
+              true
+            else
+              false
+            end
+          end
         end
       end
+      
+      ts.each do |t|
+        t.join
+      end
+    end
+  end
+  
+  it "should not be able to write while reading from same thread" do
+    hash = Tsafe::MonHash.new
+    0.upto(1000) do |count|
+      hash[count] = count
     end
     
-    Timeout.timeout(3) do
+    begin
       hash.each do |key, val|
         hash.delete(key)
       end
+      
+      raise "Expected ThreadError but didnt get raised."
+    rescue ThreadError
+      #ignore - supposed to happen.
     end
   end
 end

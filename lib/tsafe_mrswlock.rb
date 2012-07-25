@@ -47,7 +47,11 @@ class Tsafe::Mrswlock
         
         #Wait for any reads to finish that might have started while we were getting the lock.
         #Also allow write if there is only one reading thread and that reading thread is the current thread.
-        while @reads > 0 and (@reads != 1 or !@reading_threads.key?(tid))
+        while @reads > 0
+          if @reading_threads.key?(tid)
+            raise ThreadError, "Deadlock: Writing is not allowed while reading."
+          end
+          
           Thread.pass
           print "Passed because reading.\n" if @@debug
         end
