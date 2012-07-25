@@ -6,20 +6,30 @@ class Tsafe::Mrswlock
   def initialize
     @reads = 0
     @w_mutex = Mutex.new
+    
+    #This variable is used to allow reads from the writing thread (monitor-behavior).
+    @locked_by = nil
+    
+    #This hash holds thread-IDs for threads that are reading.
+    @reading_threads = {}
   end
   
   # Runs the given block through the read-synchronization.
   def rsync
     begin
-      while @w_mutex.locked?
+      tid = Thread.current.__id__
+      
+      while @w_mutex.locked? and @locked_by != tid
         Thread.pass
         print "Passed because lock.\n" if @@debug
       end
       
+      @reading_threads[tid] = true
       @reads += 1
       print "Reading more than one at a time! (#{@reads})\n" if @@debug and @reads >= 2
       yield
     ensure
+      @reading_threads.delete(tid)
       @reads -= 1
     end
   end
@@ -31,13 +41,21 @@ class Tsafe::Mrswlock
   #  end
   def wsync
     @w_mutex.synchronize do
-      #Wait for any reads to finish that might have started while we were getting the lock.
-      while @reads > 0
-        Thread.pass
-        print "Passed because reading.\n" if @@debug
+      begin
+        tid = Thread.current.__id__
+        @locked_by = tid
+        
+        #Wait for any reads to finish that might have started while we were getting the lock.
+        #Also allow write if there is only one reading thread and that reading thread is the current thread.
+        while @reads > 0 and (@reads != 1 or !@reading_threads.key?(tid))
+          Thread.pass
+          print "Passed because reading.\n" if @@debug
+        end
+        
+        yield
+      ensure
+        @locked_by = nil
       end
-      
-      yield
     end
   end
   

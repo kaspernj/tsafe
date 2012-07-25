@@ -4,7 +4,7 @@ require "monitor"
 module Tsafe
   #Autoloader for subclasses.
   def self.const_missing(name)
-    require "#{File.dirname(__FILE__)}/../include/#{name.to_s.downcase}.rb"
+    require "#{File.dirname(__FILE__)}/tsafe_#{name.to_s.downcase}.rb"
     raise "Still not loaded: '#{name}'." if !Tsafe.const_defined?(name)
     return Tsafe.const_get(name)
   end

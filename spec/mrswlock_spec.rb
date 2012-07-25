@@ -1,7 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
+require "timeout"
+
 describe "Tsafe::Rwmutex" do
-  it "should work!" do
+  it "should work with the modified hash" do
     Thread.abort_on_exception = true
     debug = false
     
@@ -22,10 +24,10 @@ describe "Tsafe::Rwmutex" do
     
     ts = []
     
-    1.upto(20) do |tcount|
+    1.upto(10) do |tcount|
       print "Starting thread #{tcount}\n" if debug
       ts << Thread.new do
-        1.upto(10000) do |count|
+        1.upto(5000) do |count|
           hash[count] = count
           
           hash[count]
@@ -46,7 +48,7 @@ describe "Tsafe::Rwmutex" do
     end
   end
   
-  it "should work!" do
+  it "should work with manual lock creation" do
     debug = false
     
     hash = {}
@@ -58,9 +60,9 @@ describe "Tsafe::Rwmutex" do
     rwm = Tsafe::Mrswlock.new
     ts = []
     
-    1.upto(20) do
+    1.upto(10) do
       ts << Thread.new do
-        1.upto(10000) do |count|
+        1.upto(5000) do |count|
           rwm.wsync do
             hash[count] = count
           end
@@ -86,6 +88,33 @@ describe "Tsafe::Rwmutex" do
     ts.each do |t|
       print "Joining #{t.__id__}\n" if debug
       t.join
+    end
+  end
+  
+  it "should be able to handle certain deadlocks" do
+    hash = Tsafe::MonHash.new
+    0.upto(1000) do |count|
+      hash[count] = count
+    end
+    
+    Timeout.timeout(3) do
+      hash.keep_if do |key, val|
+        hash.each do |key2, val2|
+          #ignore.
+        end
+        
+        if key > 500
+          true
+        else
+          false
+        end
+      end
+    end
+    
+    Timeout.timeout(3) do
+      hash.each do |key, val|
+        hash.delete(key)
+      end
     end
   end
 end
