@@ -40,11 +40,22 @@ class Tsafe::Mrswlock
   module SynModule
     def self.included(base)
       base.to_s.split("::").inject(Object, :const_get).class_eval do
+        #Yields the given block within the read-lock.
+        def _tsafe_rsync(&block)
+          @tsafe_mrswlock.rsync(&block)
+        end
+        
+        #Yields the given block within the write-lock (and read-lock).
+        def _tsafe_wsync(&block)
+          @tsafe_mrswlock.rsync(&block)
+        end
+        
         #Rename initialize.
         alias_method(:initialize_rwmutex, :initialize)
         
+        #Make another initialize-method that spawns the lock and then calls the original initialize.
         define_method(:initialize) do |*args, &block|
-          @tsafe_rwmutex = Tsafe::Mrswlock.new
+          @tsafe_mrswlock = Tsafe::Mrswlock.new
           return initialize_rwmutex(*args, &block)
         end
         
@@ -53,7 +64,7 @@ class Tsafe::Mrswlock
           alias_method(newmname, mname)
           
           define_method(mname) do |*args, &block|
-            @tsafe_rwmutex.rsync do
+            @tsafe_mrswlock.rsync do
               return self.__send__(newmname, *args, &block)
             end
           end
@@ -64,7 +75,7 @@ class Tsafe::Mrswlock
           alias_method(newmname, mname)
           
           define_method(mname) do |*args, &block|
-            @tsafe_rwmutex.wsync do
+            @tsafe_mrswlock.wsync do
               return self.__send__(newmname, *args, &block)
             end
           end

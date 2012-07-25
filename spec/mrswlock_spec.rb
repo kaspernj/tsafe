@@ -12,6 +12,14 @@ describe "Tsafe::Rwmutex" do
       hash[realcount] = realcount
     end
     
+    hash._tsafe_rsync do
+    
+    end
+    
+    hash._tsafe_wsync do
+      
+    end
+    
     ts = []
     
     1.upto(20) do |tcount|
