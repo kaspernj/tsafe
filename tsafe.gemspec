@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{tsafe}
-  s.version = "0.0.4"
+  s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Kasper Johansen"]
@@ -25,13 +25,13 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
-    "include/monarray.rb",
-    "include/monhash.rb",
-    "include/monitored.rb",
-    "include/mrswlock.rb",
-    "include/mutexed.rb",
-    "include/proxy.rb",
     "lib/tsafe.rb",
+    "lib/tsafe_monarray.rb",
+    "lib/tsafe_monhash.rb",
+    "lib/tsafe_monitored.rb",
+    "lib/tsafe_mrswlock.rb",
+    "lib/tsafe_mutexed.rb",
+    "lib/tsafe_proxy.rb",
     "spec/mrswlock_spec.rb",
     "spec/spec_helper.rb",
     "spec/tsafe_spec.rb",
