@@ -4,7 +4,14 @@ require "monitor"
 module Tsafe
   #Autoloader for subclasses.
   def self.const_missing(name)
-    require "#{File.dirname(__FILE__)}/tsafe_#{name.to_s.downcase}.rb"
+    filep = "#{File.dirname(__FILE__)}/tsafe_#{name.to_s.downcase}"
+    
+    if RUBY_ENGINE == "jruby" and File.exists?("#{filep}_jruby.rb")
+      require "#{filep}_jruby.rb"
+    else
+      require filep
+    end
+    
     raise "Still not loaded: '#{name}'." if !Tsafe.const_defined?(name)
     return Tsafe.const_get(name)
   end
