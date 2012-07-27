@@ -35,7 +35,7 @@ class Tsafe::Mrswlock
     raise ThreadError, "Deadlock: Writing is not allowed while reading." if @reading_threads.key?(tid)
     
     begin
-      @wlock_by = Thread.current.__id__
+      @wlock_by = tid
       @lock.write_lock.lock
       yield
     ensure

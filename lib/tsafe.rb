@@ -16,9 +16,9 @@ module Tsafe
     return Tsafe.const_get(name)
   end
   
-  #JRuby can corrupt an array in a threadded env. Use this method to only get a synchronized array when running JRuby and not having to write "if RUBY_ENGINE"-stuff.
+  #JRuby can corrupt an array in a threadded env. Use this method to only get a synchronized array when running JRuby in order to not having to write "if RUBY_ENGINE"-stuff.
   def self.std_array
-    return MonArray.new if RUBY_ENGINE == "jruby"
+    return Tsafe::MonArray.new if RUBY_ENGINE == "jruby"
     return []
   end
 end
