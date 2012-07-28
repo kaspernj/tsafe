@@ -143,4 +143,32 @@ describe "Tsafe::Rwmutex" do
       #ignore - supposed to happen.
     end
   end
+  
+  it "should include thread-safe array" do
+    arr = Tsafe::MonArray.new
+    0.upto(1000) do |count|
+      arr << count
+    end
+    
+    ts = []
+    0.upto(20) do
+      ts << Thread.new do
+        arr.each do |i|
+          something = i + 100 / 5
+        end
+        
+        0.upto(500) do |count|
+          arr << count + 1000
+        end
+        
+        arr.delete_if do |count|
+          count > 1000
+        end
+      end
+    end
+    
+    ts.each do |t|
+      t.join
+    end
+  end
 end
