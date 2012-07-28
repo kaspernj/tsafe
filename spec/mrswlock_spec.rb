@@ -99,13 +99,13 @@ describe "Tsafe::Rwmutex" do
   
   it "should be able to read while writing from same thread while other threads are stressing" do
     hash = Tsafe::MonHash.new
-    0.upto(1000) do |count|
+    0.upto(1500) do |count|
       hash[count] = count
     end
     
-    Timeout.timeout(7) do
+    Timeout.timeout(14) do
       ts = []
-      1.upto(5) do
+      1.upto(20) do
         ts << Thread.new do
           hash.keep_if do |key, val|
             hash.each do |key2, val2|
@@ -157,7 +157,7 @@ describe "Tsafe::Rwmutex" do
           something = i + 100 / 5
         end
         
-        0.upto(500) do |count|
+        0.upto(1000) do |count|
           arr << count + 1000
         end
         

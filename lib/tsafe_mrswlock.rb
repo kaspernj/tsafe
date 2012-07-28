@@ -6,6 +6,7 @@ class Tsafe::Mrswlock
   def initialize
     @reads = 0
     @w_mutex = Mutex.new
+    @threads_read_stopped = []
     
     #This variable is used to allow reads from the writing thread (monitor-behavior).
     @locked_by = nil
@@ -17,14 +18,25 @@ class Tsafe::Mrswlock
   # Runs the given block through the read-synchronization.
   def rsync
     begin
-      tid = Thread.current.__id__
-      Thread.pass while @w_mutex.locked? and @locked_by != tid
-      @reading_threads[tid] = true
-      @reads += 1
-      yield
+      begin
+        tid = Thread.current.__id__
+        
+        while @w_mutex.locked? and @locked_by != tid
+          @threads_read_stopped << Thread.current
+          Thread.stop
+        end
+        
+        @threads_read_stopped.delete(Thread.current)
+        @reading_threads[tid] = true
+        @reads += 1
+        yield
+      ensure
+        @reading_threads.delete(tid)
+        @reads -= 1
+      end
     ensure
-      @reading_threads.delete(tid)
-      @reads -= 1
+      #Restart stopped writing-thread.
+      @threads_write_stopped.run if @threads_write_stopped and @reads <= 0
     end
   end
   
@@ -34,21 +46,30 @@ class Tsafe::Mrswlock
   #    #do something within lock.
   #  end
   def wsync
-    @w_mutex.synchronize do
-      begin
-        tid = Thread.current.__id__
-        @locked_by = tid
-        
-        #Wait for any reads to finish that might have started while we were getting the lock.
-        #Also allow write if there is only one reading thread and that reading thread is the current thread.
-        while @reads > 0
-          raise ThreadError, "Deadlock: Writing is not allowed while reading." if @reading_threads.key?(tid)
-          Thread.pass
+    begin
+      @w_mutex.synchronize do
+        begin
+          tid = Thread.current.__id__
+          @locked_by = tid
+          
+          #Wait for any reads to finish that might have started while we were getting the lock.
+          #Also allow write if there is only one reading thread and that reading thread is the current thread.
+          while @reads > 0
+            raise ThreadError, "Deadlock: Writing is not allowed while reading." if @reading_threads.key?(tid)
+            @threads_write_stopped = Thread.current
+            Thread.stop
+          end
+          
+          yield
+        ensure
+          @locked_by = nil
+          @threads_write_stopped = nil
         end
-        
-        yield
-      ensure
-        @locked_by = nil
+      end
+    ensure
+      #Restart any stopped reading-threads.
+      while thread = @threads_read_stopped.shift
+        thread.run
       end
     end
   end
