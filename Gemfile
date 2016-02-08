@@ -10,4 +10,6 @@ group :development do
   gem "rdoc", "~> 3.12"
   gem "bundler", ">= 1.0.0"
   gem "jeweler", "~> 1.8.3"
+  gem "best_practice_project", github: "kaspernj/best_practice_project", require: false
+  gem "rubocop", "0.37.0", require: false
 end

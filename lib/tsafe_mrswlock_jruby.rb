@@ -6,17 +6,17 @@ class Tsafe::Mrswlock
   # Sets various variables.
   def initialize
     @lock = java.util.concurrent.locks.ReentrantReadWriteLock.new
-    
-    #This hash holds thread-IDs for threads that are reading.
+
+    # This hash holds thread-IDs for threads that are reading.
     @reading_threads = {}
   end
-  
+
   # Runs the given block through the read-synchronization.
   def rsync
     @lock.read_lock.lock
     tid = Thread.current.__id__
     @reading_threads[tid] = true
-    
+
     begin
       yield
     ensure
@@ -24,8 +24,8 @@ class Tsafe::Mrswlock
       @lock.read_lock.unlock
     end
   end
-  
-  #Runs the given block through the write-synchronization (locks both reading and writing).
+
+  # Runs the given block through the write-synchronization (locks both reading and writing).
   #===Examples
   #  lock.wsync do
   #    #do something within lock.
@@ -33,7 +33,7 @@ class Tsafe::Mrswlock
   def wsync
     tid = Thread.current.__id__
     raise ThreadError, "Deadlock: Writing is not allowed while reading." if @reading_threads.key?(tid)
-    
+
     begin
       @wlock_by = tid
       @lock.write_lock.lock

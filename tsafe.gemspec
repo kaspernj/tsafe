@@ -4,14 +4,14 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{tsafe}
+  s.name = "tsafe"
   s.version = "0.0.11"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Kasper Johansen"]
-  s.date = %q{2012-07-28}
-  s.description = %q{Proxy-objects for making another object threadsafe by proxying calls through mutex and method_missing. Monitored array and hash where all methods are going through monitor. Threadsafe class for including into a class that extends another class in order to make it threadsafe.}
-  s.email = %q{k@spernj.org}
+  s.date = "2012-07-28"
+  s.description = "Proxy-objects for making another object threadsafe by proxying calls through mutex and method_missing. Monitored array and hash where all methods are going through monitor. Threadsafe class for including into a class that extends another class in order to make it threadsafe."
+  s.email = "k@spernj.org"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -39,31 +39,30 @@ Gem::Specification.new do |s|
     "spec/tsafe_spec.rb",
     "tsafe.gemspec"
   ]
-  s.homepage = %q{http://github.com/kaspernj/tsafe}
+  s.homepage = "http://github.com/kaspernj/tsafe"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
-  s.summary = %q{Threadsafe proxy, array, hash and framework for making other classes threadsafe.}
+  s.rubygems_version = "1.6.2"
+  s.summary = "Threadsafe proxy, array, hash and framework for making other classes threadsafe."
 
-  if s.respond_to? :specification_version then
+  if s.respond_to? :specification_version
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, ["~> 2.8.0"])
-      s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_development_dependency(%q<bundler>, [">= 1.0.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new("1.2.0")
+      s.add_development_dependency("rspec", ["~> 2.8.0"])
+      s.add_development_dependency("rdoc", ["~> 3.12"])
+      s.add_development_dependency("bundler", [">= 1.0.0"])
+      s.add_development_dependency("jeweler", ["~> 1.8.3"])
     else
-      s.add_dependency(%q<rspec>, ["~> 2.8.0"])
-      s.add_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_dependency(%q<bundler>, [">= 1.0.0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
+      s.add_dependency("rspec", ["~> 2.8.0"])
+      s.add_dependency("rdoc", ["~> 3.12"])
+      s.add_dependency("bundler", [">= 1.0.0"])
+      s.add_dependency("jeweler", ["~> 1.8.3"])
     end
   else
-    s.add_dependency(%q<rspec>, ["~> 2.8.0"])
-    s.add_dependency(%q<rdoc>, ["~> 3.12"])
-    s.add_dependency(%q<bundler>, [">= 1.0.0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
+    s.add_dependency("rspec", ["~> 2.8.0"])
+    s.add_dependency("rdoc", ["~> 3.12"])
+    s.add_dependency("bundler", [">= 1.0.0"])
+    s.add_dependency("jeweler", ["~> 1.8.3"])
   end
 end
-
